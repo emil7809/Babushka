@@ -1,95 +1,139 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Babushka</title>
+    <title>ret galleri til øvelser</title>
     <style>
+        body {
+            font-family: sans-serif;
+        }
+
         img {
             width: 100%;
         }
 
-        .style {
-            margin: 5px;
-            padding: 5px;
+        #liste {
             display: grid;
-            grid-gap: 5px;
-            border: 1px solid #000;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-gap: 1em;
+            margin: 2em;
         }
 
-        main {
-            margin: 0 auto;
-            width: 80vw;
-            max-width: 1000px;
+        .ret {
+            padding: 1em;
+            border: 1px solid;
+            border-radius: 1em;
         }
 
-        main {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        nav {
+            position: relative;
+            height: 0;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .valgt {
+            background-color: #f26666;
+        }
+
+        button {
+            background-color: #ffffff;
+            border: 0.1px #cecece solid;
+            border-radius: 5px;
         }
 
     </style>
+
 </head>
 
 <body>
-    <main>
-        <!--<section class="container"></section>-->
 
-        <template>
-            <article class="style">
-                <img src="" alt="" class="billede">
-                <h2 class="navn"></h2>
-                <p class="titel"></p>
-                <p class="fødselsdag"></p>
-            </article>
-        </template>
-    </main>
+    <header>
+        <h1>Menu</h1>
+        <nav>
+            <button data-kategori="alle" class="valgt">Alle</button>
+            <button data-kategori="forretter">Forretter</button>
+            <button data-kategori="hovedretter">Hovedretter</button>
+            <button data-kategori="desserter">Desserter</button>
+            <button data-kategori="drikkevarer">Drikkevarer</button>
+            <button data-kategori="sideorders">Sideorders</button>
+        </nav>
+
+    </header>
+
+    <section id="liste"></section>
+
+    <template>
+        <article class="ret">
+            <img src="" alt="" class="profil-billede">
+            <h2 class="navn"></h2>
+            <p class="kortbeskrivelse"></p>
+            <p class="pris">Pris: </p>
+
+        </article>
+    </template>
+
+
     <script>
-        const url = "https://babushka-dd8a.restdb.io/rest/menu";
+        const header = document.querySelector("header h1");
+        const medieurl = "https://babushka-dd8a.restdb.io/media/";
+        let filter = "alle";
+        const myHeaders = {
 
-        const medieurl = "https://babushka-dd8a.restdb.io/media";
+            "x-apikey": "600ec2fb1346a1524ff12de4"
+        }
+        document.addEventListener("DOMContentLoaded", start)
+        let retter;
 
-        const options = {
-            headers: {
-                'x-apikey': "600ec2fb1346a1524ff12de4"
-            }
-        };
 
-        async function hentData() {
-            const resspons = await fetch(url, options);
-            const json = await resspons.json();
-            vis(json);
+        // første funktion der kaldes efter DOM er loaded
+        function start() {
+            const filterknapper = document.querySelectorAll("nav button");
+            filterknapper.forEach(knap => knap.addEventListener("click", filterRetter));
+            loadJSON();
         }
 
+        function filterRetter() {
+            filter = this.dataset.kategori;
+            document.querySelector(".valgt").classList.remove("valgt");
+            this.classList.add("valgt");
+            visretter();
+            header.textContent = this.textContent;
+        }
 
+        async function loadJSON() {
+            const JSONData = await fetch("https://babushka-dd8a.restdb.io/rest/menu", {
+                headers: myHeaders
+            });
+            retter = await JSONData.json();
+            console.log("retter", retter);
+            visretter();
+        }
 
-        const main = document.querySelector("main");
-        const template = document.querySelector("template").content;
+        //funktion der viser retter i liste view
+        function visretter() {
 
-        function vis(json) {
-            console.log(json);
-            json.forEach(ret => {
-                const klon = template.cloneNode(true);
-                klon.querySelector(".billede").src = medieurl + ret.billede;
-                klon.querySelector(".navn").textContent = ret.navn;
-                klon.querySelector(".navn").textContent += " " + ret.efternavn;
-                klon.querySelector(".titel").textContent = ret.titel;
-                klon.querySelector(".fødselsdag").textContent = ret.fødselsdag;
-                main.appendChild(klon);
+            const dest = document.querySelector("#liste"); // container til articles med en ret
+            const skabelon = document.querySelector("template").content; // select indhold af html skabelon (article)
 
+            dest.textContent = "";
+            retter.forEach(ret => {
+
+                // loop igennem json (retter)
+                if (filter == ret.kategori || filter == "alle") {
+                    const klon = skabelon.cloneNode(true);
+                    klon.querySelector(".profil-billede").src = medieurl + ret.billede;
+                    klon.querySelector(".navn").textContent = ret.navn;
+                    klon.querySelector(".kortbeskrivelse").textContent = ret.kortbeskrivelse;
+                    klon.querySelector(".pris").textContent += ret.pris + ",-";
+                    dest.appendChild(klon);
+                }
             })
-
         }
-
-        hentData(url);
 
     </script>
-
-
-
-
-
 </body>
 
 </html>
