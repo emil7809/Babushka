@@ -23,25 +23,32 @@
 
         .ret {
             padding: 1em;
-            border: 1px solid;
-            border-radius: 1em;
+            background-color: #bababa;
+        }
+
+        .ret:nth-child(odd) {
+            background-color: white;
         }
 
         nav {
-            position: relative;
-            height: 0;
-            box-sizing: border-box;
-            text-align: center;
+            margin-left: 2em;
+        }
+
+        h1 {
+            margin-left: 1em;
+            margin-bottom: -1em;
         }
 
         .valgt {
-            background-color: #f26666;
+            background-color: #ff8900;
         }
 
         button {
             background-color: #ffffff;
             border: 0.1px #cecece solid;
             border-radius: 5px;
+            box-shadow: 5px 5px 5px -8px #000000;
+            margin: 0.5em;
         }
 
     </style>
@@ -49,9 +56,10 @@
 </head>
 
 <body>
+    <img src="splash.png" alt="splash">
 
     <header>
-        <h1>Menu</h1>
+
         <nav>
             <button data-kategori="alle" class="valgt">Alle</button>
             <button data-kategori="forretter">Forretter</button>
@@ -62,7 +70,7 @@
         </nav>
 
     </header>
-
+    <h1>Menu</h1>
     <section id="liste"></section>
 
     <template>
