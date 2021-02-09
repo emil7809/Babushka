@@ -128,9 +128,14 @@
                     klon.querySelector(".navn").textContent = ret.navn;
                     klon.querySelector(".kortbeskrivelse").textContent = ret.kortbeskrivelse;
                     klon.querySelector(".pris").textContent += ret.pris + ",-";
+                    klon.querySelector(".ret").addEventListener("click", () => visDetalier(ret));
                     dest.appendChild(klon);
                 }
             })
+
+            function visDetalier(retten) {
+                location.href = `single.html?id=${retten._id}`;
+            }
         }
 
     </script>
