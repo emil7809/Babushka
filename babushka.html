@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ret galleri til øvelser</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: sans-serif;
         }
@@ -16,13 +21,14 @@
 
         #liste {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            grid-gap: 1em;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            grid-gap: 0.5em;
             margin: 2em;
+            margin-left: 10vw;
+            margin-right: 10vw;
         }
 
         .ret {
-            padding: 1em;
             background-color: #bababa;
         }
 
@@ -31,11 +37,11 @@
         }
 
         nav {
-            margin-left: 2em;
+            margin-left: 10vw;
         }
 
         h1 {
-            margin-left: 1em;
+            margin-left: 10vw;
             margin-bottom: -1em;
         }
 
@@ -49,6 +55,7 @@
             border-radius: 5px;
             box-shadow: 5px 5px 5px -8px #000000;
             margin: 0.5em;
+            padding: 10px;
         }
 
     </style>
@@ -59,7 +66,7 @@
     <img src="splash.png" alt="splash">
 
     <header>
-
+        <!--<h1>Menu</h1>-->
         <nav>
             <button data-kategori="alle" class="valgt">Alle</button>
             <button data-kategori="forretter">Forretter</button>
@@ -78,7 +85,7 @@
             <img src="" alt="" class="profil-billede">
             <h2 class="navn"></h2>
             <p class="kortbeskrivelse"></p>
-            <p class="pris">Pris: </p>
+            <p class="pris"></p>
 
         </article>
     </template>
@@ -108,7 +115,7 @@
             document.querySelector(".valgt").classList.remove("valgt");
             this.classList.add("valgt");
             visretter();
-            header.textContent = this.textContent;
+            //header.textContent = this.textContent;
         }
 
         async function loadJSON() {
@@ -135,7 +142,7 @@
                     klon.querySelector(".profil-billede").src = medieurl + ret.billede;
                     klon.querySelector(".navn").textContent = ret.navn;
                     klon.querySelector(".kortbeskrivelse").textContent = ret.kortbeskrivelse;
-                    klon.querySelector(".pris").textContent += ret.pris + ",-";
+                    klon.querySelector(".pris").textContent += "Pris: " + ret.pris + ",-";
                     klon.querySelector(".ret").addEventListener("click", () => visDetalier(ret));
                     dest.appendChild(klon);
                 }
